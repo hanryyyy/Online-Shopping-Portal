@@ -9,7 +9,8 @@ if(isset($_POST['submit'])){
 				unset($_SESSION['cart'][$key]);
 			}else{
 				$_SESSION['cart'][$key]['quantity']=$val;
-
+				$_SESSION['cart'][$key]['color']=$_POST['color'][$key];
+				$_SESSION['cart'][$key]['size']=$_POST['size'][$key];
 			}
 		}
 			echo "<script>alert('Your Cart hasbeen Updated');</script>";
@@ -43,16 +44,16 @@ else{
 	$pdd=$_SESSION['pid'];
 	$value=array_combine($pdd,$quantity);
 
-
 		foreach($value as $qty=> $val34){
+			$color=$_POST['color'][$qty];
+            $size=$_POST['size'][$qty];
+			mysqli_query($con,"insert into orders(userId,productId,quantity,color,size) values('".$_SESSION['id']."','$qty','$val34','$color','$size')");
+			mysqli_query($con,"update products set productAvailability=productAvailability-'$val34' where id='$qty'");
+		}
+			header('location:payment-method.php');
+		}
+	}
 
-
-
-mysqli_query($con,"insert into orders(userId,productId,quantity) values('".$_SESSION['id']."','$qty','$val34')");
-header('location:payment-method.php');
-}
-}
-}
 
 // code for billing address updation
 	if(isset($_POST['update']))
@@ -174,8 +175,9 @@ if(!empty($_SESSION['cart'])){
 					<th class="cart-romove item">Remove</th>
 					<th class="cart-description item">Image</th>
 					<th class="cart-product-name item">Product Name</th>
-			
 					<th class="cart-qty item">Quantity</th>
+					<th class="cart-color item">Color</th>
+					<th class="cart-color item">Size</th>
 					<th class="cart-sub-total item">Price Per unit</th>
 					<th class="cart-sub-total item">Shipping Charge</th>
 					<th class="cart-total last-item">Grandtotal</th>
@@ -183,7 +185,7 @@ if(!empty($_SESSION['cart'])){
 			</thead><!-- /thead -->
 			<tfoot>
 				<tr>
-					<td colspan="7">
+					<td colspan="9">
 						<div class="shopping-cart-btn">
 							<span class="">
 								<a href="index.php" class="btn btn-upper btn-primary outer-left-xs">Continue Shopping</a>
@@ -207,6 +209,8 @@ if(!empty($_SESSION['cart'])){
 			if(!empty($query)){
 			while($row = mysqli_fetch_array($query)){
 				$quantity=$_SESSION['cart'][$row['id']]['quantity'];
+				$color=$_SESSION['cart'][$row['id']]['color'];
+                $size=$_SESSION['cart'][$row['id']]['size'];
 				$subtotal= $_SESSION['cart'][$row['id']]['quantity']*$row['productPrice']+$row['shippingCharge'];
 				$totalprice += $subtotal;
 				$_SESSION['qnty']=$totalqunty+=$quantity;
@@ -227,21 +231,7 @@ if(!empty($_SESSION['cart'])){
 
 $_SESSION['sid']=$pd;
 						 ?></a></h4>
-						<div class="row">
-							<div class="col-sm-4">
-								<div class="rating rateit-small"></div>
-							</div>
-							<div class="col-sm-8">
-<?php $rt=mysqli_query($con,"select * from productreviews where productId='$pd'");
-$num=mysqli_num_rows($rt);
-{
-?>
-								<div class="reviews">
-									( <?php echo htmlentities($num);?> Reviews )
-								</div>
-								<?php } ?>
-							</div>
-						</div><!-- /.row -->
+						
 						
 					</td>
 					<td class="cart-product-quantity">
@@ -253,9 +243,26 @@ $num=mysqli_num_rows($rt);
 				             <input type="text" value="<?php echo $_SESSION['cart'][$row['id']]['quantity']; ?>" name="quantity[<?php echo $row['id']; ?>]">
 				             
 			              </div>
-		            </td>
+		            </td>  
+
+					<td class="cart-product-color">
+						<select name="color[<?php echo $row['id']; ?>]" class="form-control" style = "width:100px">
+							<option value="Black" <?php if($color == 'Black') echo 'selected'; ?>>Black</option>
+                        	<option value="White" <?php if($color == 'White') echo 'selected'; ?>>White</option>
+                        	<option value="Red" <?php if($color == 'Red') echo 'selected'; ?>>Red</option>
+						</select>
+					</td>
+
+					<td class="cart-product-size">
+					<select name="size[<?php echo $row['id']; ?>]" class="form-control" style = "width:100px">
+                        <option value="S" <?php if($size == 'S') echo 'selected'; ?>>S</option>
+                        <option value="M" <?php if($size == 'M') echo 'selected'; ?>>M</option>
+                        <option value="L" <?php if($size == 'L') echo 'selected'; ?>>L</option>
+                    </select>					
+					</td>
+
 					<td class="cart-product-sub-total"><span class="cart-sub-total-price"><?php echo "VND"." ".$row['productPrice']; ?>.000</span></td>
-<td class="cart-product-sub-total"><span class="cart-sub-total-price"><?php echo "VND"." ".$row['shippingCharge']; ?>.000</span></td>
+						<td class="cart-product-sub-total"><span class="cart-sub-total-price"><?php echo "VND"." ".$row['shippingCharge']; ?>.000</span></td>
 
 					<td class="cart-product-grand-total"><span class="cart-grand-total-price"><?php echo ($_SESSION['cart'][$row['id']]['quantity']*$row['productPrice']+$row['shippingCharge']); ?>.000</span></td>
 				</tr>

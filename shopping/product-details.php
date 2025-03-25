@@ -393,20 +393,38 @@ $num=mysqli_num_rows($rt);
 
 								</div><!-- /.row -->
 							</div><!-- /.price-container -->
-
-	
-
-
-
-
 							<div class="quantity-container info-container">
-								<div class="row">
+								<div class="row" style = "width:10px">
+									<div class = "col-sm-2" style = "width:40px">
+										<span class="label">Color :</span>
+									</div>
+									<div class = "col-sm-3">
+										<select name = "color" class="form-control" style = "width:100px">
+											<option value = "">Select</option>
+											<option value = "Black">Black</option>
+											<option value = "White">White</option>
+											<option value = "Red">Red</option>
+										</select>
+									</div>
 									
-									<div class="col-sm-2">
+									<div class="col-sm-2" style = "width:40px">
+										<span class="label">Size :</span>
+									</div>
+									<div class="col-sm-3">
+										<select name = "size" class="form-control" style = "width:100px">
+											<option value = "">Select</option>
+											<option value = "S">S</option>
+											<option value = "M">M</option>
+											<option value = "L">L</option>
+											<option value = "XL">XL</option>
+										</select>
+									</div>
+
+									<div class="col-sm-2" style = "width:40px">
 										<span class="label">Qty :</span>
 									</div>
 									
-									<div class="col-sm-2">
+									<div class="col-sm-3">
 										<div class="cart-quantity">
 											<div class="quant-input">
 								                <div class="arrows">
@@ -418,8 +436,8 @@ $num=mysqli_num_rows($rt);
 							            </div>
 									</div>
 
-									<div class="col-sm-7">
-<?php if($row['productAvailability']=='In Stock'){?>
+									<div class="col-sm-4">
+					<?php if($row['productAvailability']=='In Stock'){?>
 										<a href="product-details.php?page=product&action=add&id=<?php echo $row['id']; ?>" class="btn btn-primary"><i class="fa fa-shopping-cart inner-right-vs"></i> ADD TO CART</a>
 													<?php } else {?>
 							<div class="action" style="color:red">Out of Stock</div>

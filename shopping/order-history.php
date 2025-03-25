@@ -95,7 +95,8 @@ popUpWin = open(URLStr,'popUpWin', 'toolbar=no,location=no,directories=no,status
 					<th class="cart-romove item">#</th>
 					<th class="cart-description item">Image</th>
 					<th class="cart-product-name item">Product Name</th>
-			
+					<th class="cart-color item">Color</th>
+					<th class="cart-size item">Size</th>
 					<th class="cart-qty item">Quantity</th>
 					<th class="cart-sub-total item">Price Per unit</th>
 					<th class="cart-sub-total item">Shipping Charge</th>
@@ -108,7 +109,7 @@ popUpWin = open(URLStr,'popUpWin', 'toolbar=no,location=no,directories=no,status
 			
 			<tbody>
 
-<?php $query=mysqli_query($con,"select products.productImage1 as pimg1,products.productName as pname,products.id as proid,orders.productId as opid,orders.quantity as qty,products.productPrice as pprice,products.shippingCharge as shippingcharge,orders.paymentMethod as paym,orders.orderDate as odate,orders.id as orderid from orders join products on orders.productId=products.id where orders.userId='".$_SESSION['id']."' and orders.paymentMethod is not null");
+<?php $query=mysqli_query($con,"select products.productImage1 as pimg1,products.productName as pname,products.id as proid,orders.productId as opid,orders.color as color,orders.size as size,orders.quantity as qty,products.productPrice as pprice,products.shippingCharge as shippingcharge,orders.paymentMethod as paym,orders.orderDate as odate,orders.id as orderid from orders join products on orders.productId=products.id where orders.userId='".$_SESSION['id']."' and orders.paymentMethod is not null");
 $cnt=1;
 while($row=mysqli_fetch_array($query))
 {
@@ -122,10 +123,10 @@ while($row=mysqli_fetch_array($query))
 					</td>
 					<td class="cart-product-name-info">
 						<h4 class='cart-product-description'><a href="product-details.php?pid=<?php echo $row['opid'];?>">
-						<?php echo $row['pname'];?></a></h4>
-						
-						
+						<?php echo $row['pname'];?></a></h4>		
 					</td>
+					<td class="cart-product-color"><?php echo $row['color']; ?></td>
+					<td class="cart-product-size"><?php echo $row['size']; ?></td>
 					<td class="cart-product-quantity">
 						<?php echo $qty=$row['qty']; ?>   
 		            </td>
