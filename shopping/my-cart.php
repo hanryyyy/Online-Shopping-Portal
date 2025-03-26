@@ -44,12 +44,36 @@ else{
 	$pdd=$_SESSION['pid'];
 	$value=array_combine($pdd,$quantity);
 
-		foreach($value as $qty=> $val34){
-			$color=$_POST['color'][$qty];
-            $size=$_POST['size'][$qty];
-			mysqli_query($con,"insert into orders(userId,productId,quantity,color,size) values('".$_SESSION['id']."','$qty','$val34','$color','$size')");
-			mysqli_query($con,"update products set productAvailability=productAvailability-'$val34' where id='$qty'");
+	foreach($value as $qty => $val34){
+		$color = $_POST['color'][$qty];
+		$size = $_POST['size'][$qty];
+	
+		// Get the current quantity of the product
+		$query = mysqli_query($con, "SELECT quantity FROM products WHERE id='$qty'");
+		$product = mysqli_fetch_array($query);
+		$currentQuantity = $product['quantity'];
+	
+		// Check if order quantity is valid
+		if ($val34 > $currentQuantity) {
+			echo "<script>alert('Not enough stock available for product ID: $qty');</script>";
+			continue; // Bỏ qua sản phẩm này nếu không đủ số lượng
 		}
+	
+		// Calculate new quantity
+		$newQuantity = $currentQuantity - $val34;
+	
+		// Update product availability
+		$productAvailability = $newQuantity > 0 ? "In Stock" : "Out of Stock";
+	
+		// Add order into table `orders`
+		mysqli_query($con, "INSERT INTO orders(userId,productId,quantity,color,size) 
+							VALUES('".$_SESSION['id']."','$qty','$val34','$color','$size')");
+	
+		// Update product quantity and status in the `products` table
+		mysqli_query($con, "UPDATE products 
+							SET quantity='$newQuantity', productAvailability='$productAvailability' 
+							WHERE id='$qty'");
+	}
 			header('location:payment-method.php');
 		}
 	}

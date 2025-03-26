@@ -61,7 +61,7 @@ popUpWin = open(URLStr,'popUpWin', 'toolbar=no,location=no,directories=no,status
 <tbody>
 <?php 
 $orderid=intval($_GET['oid']);
-$query=mysqli_query($con,"select orders.id as oid,users.name as username,users.email as useremail,users.contactno as usercontact,users.shippingAddress as shippingaddress,users.shippingCity as shippingcity,users.shippingState as shippingstate,users.shippingPincode as shippingpincode,products.productName as productname,products.shippingCharge as shippingcharge,orders.quantity as quantity,orders.orderDate as orderdate,products.productPrice as productprice,billingAddress,billingState,billingCity,billingPincode,products.id as pid,productImage1,shippingcharge from orders join users on  orders.userId=users.id join products on products.id=orders.productId where orders.id='$orderid'");
+$query=mysqli_query($con,"select orders.id as oid,users.name as username,users.email as useremail,users.contactno as usercontact,users.shippingAddress as shippingaddress,users.shippingCity as shippingcity,users.shippingState as shippingstate,users.shippingPincode as shippingpincode,products.productName as productname,products.shippingCharge as shippingcharge,orders.quantity as quantity,orders.color as color,orders.size as size,orders.orderDate as orderdate,products.productPrice as productprice,billingAddress,billingState,billingCity,billingPincode,products.id as pid,productImage1,shippingcharge from orders join users on  orders.userId=users.id join products on products.id=orders.productId where orders.id='$orderid'");
 $cnt=1;
 while($row=mysqli_fetch_array($query))
 {
@@ -92,6 +92,12 @@ while($row=mysqli_fetch_array($query))
 											<td><?php echo htmlentities($row['productname']);?></td>
 												<th>Product Image</th>
 											<td><img src="productimages/<?php echo htmlentities($row['pid']."/".$row['productImage1']);?>" width="100"></td>
+										</tr>
+										<tr>
+											<th>Color</th>
+											<td><?php echo htmlentities($row['color']);?></td>
+												<th>Size</th>
+											<td><?php echo htmlentities($row['size']);?></td>
 										</tr>
 										<tr>
 											<th>Product Quantity</th>
