@@ -2,6 +2,7 @@
 session_start();
 error_reporting(0);
 include('includes/config.php');
+//Add to product cart
 if(isset($_GET['action']) && $_GET['action']=="add"){
 	$id=intval($_GET['id']);
 	if(isset($_SESSION['cart'][$id])){
@@ -19,6 +20,7 @@ if(isset($_GET['action']) && $_GET['action']=="add"){
 		}
 	}
 }
+//Add to wishlist
 $pid=intval($_GET['pid']);
 if(isset($_GET['pid']) && $_GET['action']=="wishlist" ){
 	if(strlen($_SESSION['login'])==0)
@@ -209,6 +211,8 @@ while ($rws=mysqli_fetch_array($ret)) {
 <!-- ============================================== COLOR: END ============================================== -->
 				</div>
 			</div><!-- /.sidebar -->
+			
+//Show product details 
 <?php 
 $ret=mysqli_query($con,"select * from products where id='$pid'");
 while($row=mysqli_fetch_array($ret))
